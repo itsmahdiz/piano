@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Piano Tiles Pro</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div id="game-container">
+        <canvas id="game-canvas"></canvas>
+
+        <!-- UI Overlay -->
+        <div id="ui-layer">
+            <div id="score-display">0</div>
+        </div>
+
+        <!-- Start Screen -->
+        <div id="start-screen" class="screen active">
+            <h1 class="title">PIANO<br>TILES</h1>
+            <p class="instruction">Tap the black tiles to play</p>
+
+            <div class="song-select-container">
+                <label for="song-select">Select Song:</label>
+                <select id="song-select">
+                    <option value="ode_to_joy">Ode to Joy</option>
+                    <option value="fur_elise">Fur Elise</option>
+                    <option value="canon_d">Canon in D</option>
+                    <option value="twinkle">Twinkle Twinkle</option>
+                </select>
+            </div>
+
+            <button id="start-btn" class="play-btn">PLAY</button>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="game-over-screen" class="screen">
+            <h2 class="game-over-title">FAILED</h2>
+            <p class="score-text">Score: <span id="final-score">0</span></p>
+            <button id="restart-btn" class="play-btn">RETRY</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
