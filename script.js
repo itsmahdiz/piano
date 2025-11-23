@@ -5,23 +5,23 @@ const startScreen = document.getElementById('start-screen');
 const gameOverScreen = document.getElementById('game-over-screen');
 const finalScoreEl = document.getElementById('final-score');
 
-// Game State
+
 let isPlaying = false;
 let score = 0;
-let speed = 0; // Pixels per frame
+let speed = 0; 
 let tiles = [];
 let laneCount = 4;
-let tileHeight = 150; // Will be calculated based on screen height
+let tileHeight = 150; 
 let laneWidth = 0;
 let animationId;
 let lastTime = 0;
 let startTileClicked = false;
 
-// Audio Context
+
 let audioCtx;
 let noteIndex = 0;
 
-// Song Library
+
 const songs = {
     ode_to_joy: [
         329.63, 329.63, 349.23, 392.00, 392.00, 349.23, 329.63, 293.66, // E E F G G F E D
@@ -94,7 +94,7 @@ function resize() {
     canvas.width = canvas.parentElement.clientWidth;
     canvas.height = canvas.parentElement.clientHeight;
     laneWidth = canvas.width / laneCount;
-    tileHeight = canvas.height / 4; // Show 4 tiles on screen
+    tileHeight = canvas.height / 4; 
 }
 window.addEventListener('resize', resize);
 resize();
@@ -111,13 +111,13 @@ function spawnTile(yPosition) {
 }
 
 function initGame() {
-    // Get selected song
+    
     const songSelect = document.getElementById('song-select');
     const selectedSong = songSelect ? songSelect.value : 'ode_to_joy';
     currentMelody = songs[selectedSong];
 
     tiles = [];
-    // Spawn initial tiles filling the screen
+    
     for (let i = 0; i < 6; i++) {
         spawnTile(canvas.height - (i * tileHeight) - tileHeight);
     }
@@ -125,7 +125,7 @@ function initGame() {
     isPlaying = false;
     startTileClicked = false;
     score = 0;
-    speed = 5; // Initial speed
+    speed = 5; 
     noteIndex = 0;
     scoreEl.innerText = score;
 
@@ -135,26 +135,25 @@ function initGame() {
 function update() {
     if (!startTileClicked) return;
 
-    // Speed progression: Increases every 10 points
+    
     const difficultyMultiplier = Math.floor(score / 10);
     speed = 5 + (difficultyMultiplier * 0.5);
-    if (speed > 20) speed = 20; // Max speed cap
+    if (speed > 20) speed = 20; 
 
-    // Move tiles
+    
     tiles.forEach(tile => {
         tile.y += speed;
     });
 
-    // Remove off-screen tiles that were clicked
+    
     if (tiles.length > 0 && tiles[0].y > canvas.height) {
         if (tiles[0].clicked) {
             tiles.shift();
-            // Spawn new tile at the top
-            // Find the highest tile y
+            
             const highestY = tiles[tiles.length - 1].y;
             spawnTile(highestY - tileHeight);
         } else {
-            // Missed a tile!
+            
             gameOver(tiles[0]);
         }
     }
@@ -163,7 +162,7 @@ function update() {
 function draw() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // Draw Lanes
+    
     ctx.strokeStyle = '#e0e0e0';
     ctx.lineWidth = 1;
     for (let i = 1; i < laneCount; i++) {
@@ -173,22 +172,22 @@ function draw() {
         ctx.stroke();
     }
 
-    // Draw Tiles
+    
     tiles.forEach(tile => {
         const x = tile.lane * laneWidth;
         const y = tile.y;
 
         if (tile.clicked) {
-            ctx.fillStyle = 'rgba(200, 200, 200, 0.5)'; // Grayed out
+            ctx.fillStyle = 'rgba(200, 200, 200, 0.5)'; 
         } else if (tile.failed) {
-            ctx.fillStyle = '#ff0000'; // Red flash
+            ctx.fillStyle = '#ff0000'; 
         } else {
             ctx.fillStyle = tile.color;
         }
 
         ctx.fillRect(x, y, laneWidth, tileHeight);
 
-        // Draw Borders for tiles
+        
         ctx.strokeStyle = '#fff';
         ctx.strokeRect(x, y, laneWidth, tileHeight);
 
@@ -210,21 +209,21 @@ function draw() {
 }
 
 function handleTap(x, y) {
-    if (!isPlaying && startTileClicked) return; // Game Over state
+    if (!isPlaying && startTileClicked) return; 
 
     const lane = Math.floor(x / laneWidth);
 
-    // Find the lowest unclicked tile
+    
     const targetTile = tiles[0];
 
-    // Strict mode: Must tap ON the tile rect.
+    
     const hitTile = x >= targetTile.lane * laneWidth &&
         x < (targetTile.lane + 1) * laneWidth &&
         y >= targetTile.y &&
         y < targetTile.y + tileHeight;
 
     if (hitTile && !targetTile.clicked) {
-        // Success
+        
         targetTile.clicked = true;
         playNote();
         score++;
@@ -235,7 +234,7 @@ function handleTap(x, y) {
             isPlaying = true;
         }
     } else {
-        // Failed tap
+        
         if (!startTileClicked) return;
         playFailSound();
         gameOver(null, lane, y);
@@ -249,12 +248,12 @@ function gameOver(missedTile, tapLane, tapY) {
     if (missedTile) {
         missedTile.failed = true;
     } else if (tapLane !== undefined) {
-        // Draw a red block where they tapped wrong
+        
         ctx.fillStyle = '#ff0000';
-        ctx.fillRect(tapLane * laneWidth, tapY - tileHeight / 2, laneWidth, tileHeight); // Approximation
+        ctx.fillRect(tapLane * laneWidth, tapY - tileHeight / 2, laneWidth, tileHeight); 
     }
 
-    // One last draw to show the red tile
+    
     draw();
 
     setTimeout(() => {
@@ -270,7 +269,7 @@ function startGame() {
     draw();
 }
 
-// Input Handling
+
 canvas.addEventListener('touchstart', (e) => {
     e.preventDefault();
     const rect = canvas.getBoundingClientRect();
@@ -290,3 +289,4 @@ canvas.addEventListener('mousedown', (e) => {
 
 document.getElementById('start-btn').addEventListener('click', startGame);
 document.getElementById('restart-btn').addEventListener('click', startGame);
+
